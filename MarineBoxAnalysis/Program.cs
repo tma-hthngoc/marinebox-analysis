@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Win32;
 using System.IO;
-using System.Net.NetworkInformation;
 
 namespace PingTest
 {
@@ -70,7 +69,8 @@ namespace PingTest
 
         public static void Main()
         {
-            File.Delete("C:\\ResultOfPing.txt");
+            string fn = "ResultOfPing.txt";
+            File.Delete(fn);
             String IPNetwork = "";
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -101,11 +101,8 @@ namespace PingTest
                         Console.WriteLine("\t{0} / {1}", uipi.Address, uipi.IPv4Mask);
                     }
                 }
-
-
+                
                 if (IPv4 == "" || IPv4 == "127.0.0.1") continue;
-
-
 
                 //ping entire network of NICs
                 string baseIP = IPv4.Substring(0, IPv4.LastIndexOf(".") + 1);
@@ -146,19 +143,21 @@ namespace PingTest
 
                 PingNetwork.DestroyPingers();
 
-                Console.WriteLine("Finished in {0}. Found {1} active IP-addresses.", watch.Elapsed.ToString(), PingNetwork.result);
-                PingNetwork.totallines += "Finished in " + watch.Elapsed.ToString() + ". Found " + PingNetwork.result + " active IP-addresses." + Environment.NewLine;
+                Console.WriteLine("Finished in {0}. Found {1} active IP-addresses.", 
+                    watch.Elapsed.ToString(), PingNetwork.result);
+                PingNetwork.totallines += "Finished in " + watch.Elapsed.ToString()
+                    + ". Found " + PingNetwork.result + " active IP-addresses." + Environment.NewLine;
 
-                File.AppendAllText("C:\\ResultOfPing.txt", PingNetwork.totallines);
+                File.AppendAllText(fn, PingNetwork.totallines);
             }
             //write to log file            
-            File.AppendAllText("C:\\ResultOfPing.txt", IPNetwork);
+            File.AppendAllText(fn, IPNetwork);
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
-            Console.WriteLine("Done, please Press Any Key to quit, please get the file in C:\\ResultOfPing.txt  for Wallem support");
+            Console.WriteLine("Done, please Press Any Key to quit. \n\rPlease get the file \"ResultOfPing.txt\" for Wallem support");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");

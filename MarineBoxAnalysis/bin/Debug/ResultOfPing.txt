@@ -1,0 +1,69 @@
+Active IP: 192.168.34.115
+Active IP: 192.168.34.92
+Active IP: 192.168.34.88
+Active IP: 192.168.34.123
+Active IP: 192.168.34.120
+Active IP: 192.168.34.65
+Active IP: 192.168.34.79
+Active IP: 192.168.34.71
+Active IP: 192.168.34.97
+Active IP: 192.168.34.91
+Active IP: 192.168.34.99
+Active IP: 192.168.34.90
+Active IP: 192.168.34.96
+Active IP: 192.168.34.93
+Active IP: 192.168.34.100
+Active IP: 192.168.34.94
+Active IP: 192.168.34.73
+Active IP: 192.168.34.116
+Active IP: 192.168.34.107
+Active IP: 192.168.34.136
+Active IP: 192.168.34.163
+Active IP: 192.168.34.124
+Active IP: 192.168.34.72
+Active IP: 192.168.34.113
+Active IP: 192.168.34.153
+Active IP: 192.168.34.186
+Active IP: 192.168.34.98
+Active IP: 192.168.34.169
+Active IP: 192.168.34.123
+Active IP: 192.168.34.137
+Active IP: 192.168.34.139
+Active IP: 192.168.34.158
+Active IP: 192.168.34.135
+Active IP: 192.168.34.170
+Active IP: 192.168.34.187
+Active IP: 192.168.34.143
+Active IP: 192.168.34.167
+Active IP: 192.168.34.171
+Active IP: 192.168.34.188
+Active IP: 192.168.34.168
+Active IP: 192.168.34.189
+Active IP: 192.168.34.172
+Active IP: 192.168.34.173
+Active IP: 192.168.34.177
+Active IP: 192.168.34.190
+Active IP: 192.168.34.174
+Active IP: 192.168.34.180
+Active IP: 192.168.34.179
+Active IP: 192.168.34.191
+Active IP: 192.168.34.165
+Active IP: 192.168.34.183
+Active IP: 192.168.34.192
+Active IP: 192.168.34.144
+Active IP: 192.168.34.176
+Active IP: 192.168.34.216
+Active IP: 192.168.34.207
+Active IP: 192.168.34.199
+Active IP: 192.168.34.185
+Active IP: 192.168.34.222
+Active IP: 192.168.34.229
+Active IP: 192.168.34.223
+Finished in 00:00:06.4877350. Found 61 active IP-addresses.
+MAC: 080027E3A0F9
+Gateways:
+192.168.34.1
+IP Addresses: 192.168.34.115 Subnet Mask: 255.255.255.0
+MAC: 
+Gateways:
+IP Addresses: 
