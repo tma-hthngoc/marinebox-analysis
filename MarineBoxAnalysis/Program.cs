@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Win32;
 using System.IO;
+using System.Net.NetworkInformation;
 
 namespace PingTest
 {
@@ -69,11 +70,8 @@ namespace PingTest
 
         public static void Main()
         {
-            string fn = "ResultOfPing.txt";
-            File.Delete(fn);
+            File.Delete("ResultOfPing.txt");
             String IPNetwork = "";
-            List<string> activeIP = new List<string>();
-
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 Console.WriteLine(ni.Name);
@@ -103,8 +101,11 @@ namespace PingTest
                         Console.WriteLine("\t{0} / {1}", uipi.Address, uipi.IPv4Mask);
                     }
                 }
-                
+
+
                 if (IPv4 == "" || IPv4 == "127.0.0.1") continue;
+
+
 
                 //ping entire network of NICs
                 string baseIP = IPv4.Substring(0, IPv4.LastIndexOf(".") + 1);
@@ -122,36 +123,42 @@ namespace PingTest
                 //SpinWait wait = new SpinWait();
                 //Number of start IP address
                 int cnt = 1;
-                int index = 1;
-                // hthngoc - remove async running due to missing Active IP - to check RQA server.
-                // must run slowly in sequence.
+
+                Stopwatch watch = Stopwatch.StartNew();
+
                 foreach (Ping p in PingNetwork.pingers)
                 {
-                    PingReply reply = p.Send(string.Concat(baseIP, cnt.ToString()), PingNetwork.timeOut);
-                    if (reply.Status == IPStatus.Success)
+                    lock (PingNetwork.@lock)
                     {
-                        Console.WriteLine(index.ToString() + string.Concat(". Active IP: ", reply.Address.ToString()));
-                        activeIP.Add(reply.Address.ToString());
-                        IPNetwork += Environment.NewLine + index.ToString() + ". " + reply.Address.ToString();
-                        index += 1;
+                        PingNetwork.instances += 1;
                     }
-                    else {
-                        IPNetwork += Environment.NewLine + "Skipped: " + string.Concat(baseIP, cnt.ToString());
-                    }
+
+                    p.SendAsync(string.Concat(baseIP, cnt.ToString()), PingNetwork.timeOut, data, po);
                     cnt += 1;
                 }
+
+                while (PingNetwork.instances > 0)
+                {
+                    Thread.SpinWait(50);
+                }
+
+                watch.Stop();
+
                 PingNetwork.DestroyPingers();
-                Console.WriteLine("Found {0} active IP-addresses.", activeIP.Count);
-                IPNetwork += Environment.NewLine + "Found: " + activeIP.Count + Environment.NewLine;
+
+                Console.WriteLine("Finished in {0}. Found {1} active IP-addresses.", watch.Elapsed.ToString(), PingNetwork.result);
+                PingNetwork.totallines += "Finished in " + watch.Elapsed.ToString() + ". Found " + PingNetwork.result + " active IP-addresses." + Environment.NewLine;
+
+                File.AppendAllText("ResultOfPing.txt", PingNetwork.totallines);
             }
             //write to log file            
-            File.AppendAllText(fn, IPNetwork);
+            File.AppendAllText("ResultOfPing.txt", IPNetwork);
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
-            Console.WriteLine("Done, please Press Any Key to quit. \n\rPlease get the file \"ResultOfPing.txt\" for Wallem support");
+            Console.WriteLine("Done, please Press Any Key to quit, please get the file in ResultOfPing.txt  for Wallem support");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
             Console.WriteLine("=========");
