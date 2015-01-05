@@ -72,6 +72,8 @@ namespace PingTest
             string fn = "ResultOfPing.txt";
             File.Delete(fn);
             String IPNetwork = "";
+            List<string> activeIP = new List<string>();
+
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 Console.WriteLine(ni.Name);
@@ -120,35 +122,27 @@ namespace PingTest
                 //SpinWait wait = new SpinWait();
                 //Number of start IP address
                 int cnt = 1;
-
-                Stopwatch watch = Stopwatch.StartNew();
-
+                int index = 1;
+                // hthngoc - remove async running due to missing Active IP - to check RQA server.
+                // must run slowly in sequence.
                 foreach (Ping p in PingNetwork.pingers)
                 {
-                    lock (PingNetwork.@lock)
+                    PingReply reply = p.Send(string.Concat(baseIP, cnt.ToString()), PingNetwork.timeOut);
+                    if (reply.Status == IPStatus.Success)
                     {
-                        PingNetwork.instances += 1;
+                        Console.WriteLine(index.ToString() + string.Concat(". Active IP: ", reply.Address.ToString()));
+                        activeIP.Add(reply.Address.ToString());
+                        IPNetwork += Environment.NewLine + index.ToString() + ". " + reply.Address.ToString();
+                        index += 1;
                     }
-
-                    p.SendAsync(string.Concat(baseIP, cnt.ToString()), PingNetwork.timeOut, data, po);
+                    else {
+                        IPNetwork += Environment.NewLine + "Skipped: " + string.Concat(baseIP, cnt.ToString());
+                    }
                     cnt += 1;
                 }
-
-                while (PingNetwork.instances > 0)
-                {
-                    Thread.SpinWait(50);
-                }
-
-                watch.Stop();
-
                 PingNetwork.DestroyPingers();
-
-                Console.WriteLine("Finished in {0}. Found {1} active IP-addresses.", 
-                    watch.Elapsed.ToString(), PingNetwork.result);
-                PingNetwork.totallines += "Finished in " + watch.Elapsed.ToString()
-                    + ". Found " + PingNetwork.result + " active IP-addresses." + Environment.NewLine;
-
-                File.AppendAllText(fn, PingNetwork.totallines);
+                Console.WriteLine("Found {0} active IP-addresses.", activeIP.Count);
+                IPNetwork += Environment.NewLine + "Found: " + activeIP.Count + Environment.NewLine;
             }
             //write to log file            
             File.AppendAllText(fn, IPNetwork);
